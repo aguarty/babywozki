@@ -26,10 +26,10 @@ var (
 type application struct {
 	logger    *zap.Logger
 	cfg       config
+	tokenAuth *jwtauth.JWTAuth
 	db        *sql.DB
 	ctx       context.Context
 	tmpls     *appTemplates
-	tokenAuth *jwtauth.JWTAuth
 }
 
 type appTemplates struct {
