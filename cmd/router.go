@@ -49,13 +49,12 @@ func (app *application) createHTTPHandler() (http.Handler, error) {
 	mux.Route("/admin", func(admin chi.Router) {
 		admin.Use(Verifier(app.tokenAuth, app.cfg.Secure.Salt))
 		admin.Use(app.Authenticator)
+		admin.Use(middleware.StripSlashes)
+		admin.Get("/", app.errorHandlerCode(404))
 		admin.Get("/append", app.appendPage())
 		admin.Get("/remove", app.removePage())
 		admin.Get("/edit", nil)
-
-		admin.Handle("/upload", app.uploadImg())
-		admin.Handle("/metrics", promhttp.Handler())
-
+		admin.Get("/{anytext}", app.errorHandlerCode(404))
 	})
 
 	// API
@@ -73,6 +72,8 @@ func (app *application) createHTTPHandler() (http.Handler, error) {
 			v1.Use(middleware.SetHeader("Content-Type", "application/json; charset=utf-8;"))
 			v1.Use(Verifier(app.tokenAuth, app.cfg.Secure.Salt))
 			v1.Use(app.Authenticator)
+			v1.Handle("/metrics", promhttp.Handler())
+
 			v1.Route("/wozki", func(wozki chi.Router) {
 				wozki.Post("/append", app.appendItem())
 				wozki.Get("/remove/{itemID}", app.removeItem())

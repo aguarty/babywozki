@@ -30,8 +30,10 @@ type Post struct {
 type Wozki []Wozka
 
 type Wozka struct {
-	Name        string
+	Id          int64
+	Brand       string
 	Description string
+	Model       string
 	Img         string
 	Ext         string
 	Price       int64
