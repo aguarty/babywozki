@@ -1,0 +1,101 @@
+{{define "head"}}
+{{end}}
+
+{{define "title"}}Добавить{{end}}
+
+{{define "body"}}
+
+<form>
+  <div class="form-group">
+    <label for="brand">Select brand</label>
+    <select class="form-control" id="brand">
+      <option>Adamix</option>
+      <option>Woytek</option>
+      <option>Example</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="model-name">Model name</label>
+    <input type="model" class="form-control" id="model-name" placeholder="...">
+  </div>  
+
+  <div class="form-group">
+    <label for="description">Description</label>
+    <textarea class="form-control" id="description" rows="5"></textarea>
+  </div>
+
+  <div class="form-group">
+    <label for="price">Price</label>
+    <input type="price" class="form-control" id="price" placeholder="0.00">
+  </div>
+  
+  <div class="form-group">  
+    <label for="exampleFormControlInput1">Image</label>
+    <div class="input-group">  
+    <div class="custom-file">
+      <input type="file" class="custom-file-input" id="input-file" aria-describedby="inputGroupFileAddon01">
+      <label class="custom-file-label" for="input-file">Choose file</label>
+    </div>
+    </div>
+  </div>
+
+  <div class="form-group">        
+    <button type="submit" class="btn btn-primary" id="append-btn">Append</button>
+  </div>
+  
+</form>
+
+{{end}}
+
+{{define "scripts"}}
+<script type="text/javascript">
+document.querySelector('.custom-file-input').addEventListener('change',function(e){
+  var fileName = document.getElementById("input-file").files[0].name;
+  var nextSibling = e.target.nextElementSibling
+  nextSibling.innerText = fileName
+})
+
+$(document).ready(function() {
+    $('#append-btn').click(function(event) {
+      //stop submit the form, we will post it manually.
+      event.preventDefault();
+ 
+      // Get form
+      var form = $('#fileUploadForm')[0];
+ 
+      // Create a FormData object 
+      var data = new FormData(form);
+ 
+      // If you want to add an extra field for the FormData
+      data.append('brand', document.getElementById("brand").value);
+      data.append('model', document.getElementById("model-name").value);
+      data.append('price', document.getElementById("price").value);
+      data.append('description', document.getElementById("description").value);
+      data.append('imgfile', document.getElementById("input-file").files[0]);      
+ 
+      // disabled the submit button
+      $("#append-btn").prop("disabled", true);
+      $.ajax({
+        type: "POST",
+        enctype: 'multipart/form-data',
+        url: "/api/v1/wozki/append",
+        processData: false,
+        contentType: false,
+        cache: false,
+        timeout: 800000,        
+        data: data,
+        success: function () {               
+            alert("OK");
+            window.location = "/admin/append";
+        },     
+        error: function() {
+          alert("Failed");
+          $("#append-btn").prop("disabled", false);
+        },
+      });
+    });    
+});
+
+</script>
+{{end}}

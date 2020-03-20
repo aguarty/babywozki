@@ -1,0 +1,27 @@
+{{define "head"}}
+   <link href="/static/highlight/styles/ir_black.css" rel="stylesheet" media="screen">
+{{end}}
+
+{{define "title"}} "asd" {{end}}
+
+{{define "body"}}
+{{range .}}
+<div class="container" id="container">
+<div class="row" style="text-align:left;border:solid 1px #000;">
+<div class="col-md-8 col-md-offset-2">
+
+<h1>{{.Name}}</h1>
+<IMG SRC="data:image/{{.Ext}};base64, {{.Img}}" width="100px"/>
+</br>
+{{.Description}}
+</br>
+{{.Price}}
+</div>
+</div>
+</div>
+{{end}}
+
+{{end}}
+
+{{define "scripts"}}
+{{end}}

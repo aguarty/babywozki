@@ -1,0 +1,57 @@
+{{define "head"}}
+{{end}}
+
+{{define "title"}}Remove{{end}}
+
+{{define "body"}}
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Brand</th>
+      <th scope="col">Model</th>
+      <th scope="col">Price</th>
+      <th scope="col">Button</th>
+    </tr>
+  </thead>
+  <tbody>
+{{range .}}  
+    <tr>
+      <th class="ItemID" scope="row">{{.Id}}</th>
+      <td>{{.Brand}}</td>
+      <td>{{.Model}}</td>
+      <td>{{.Price}}</td>
+      <td><button id="remove-btn" type="button" class="btn btn-sm btn-outline-secondary">Remove</button></td>
+    </tr>
+{{end}}    
+  </tbody>
+</table>
+{{end}}
+
+{{define "scripts"}}
+<script type="text/javascript">
+  $("#remove-btn").click(function() {
+      var $row = $(this).closest("tr");    // Find the row
+      var $text = $row.find(".ItemID").text(); // Find the text
+      if (confirm('Remove item with ID: '+ $text+'. Are you sure?')) {
+      
+      // disabled the submit button
+      $("#remove-btn").prop("disabled", true);
+      $.ajax({
+        type: "GET",
+        url: "/api/v1/wozki/remove/"+$text,
+        timeout: 800000,        
+        success: function () {               
+            alert("Removed");
+            window.location = "/admin/remove";
+        },     
+        error: function() {
+          alert("Failed");
+          $("#remove-btn").prop("disabled", false);
+        },
+      });        
+    }
+      
+  });
+</script>
+{{end}}
